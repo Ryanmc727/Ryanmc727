@@ -1,9 +1,5 @@
 # Ryan McCabe
 
-Network & security-focused builder based in Florida. I run a production homelab that I use to study, break things, and build tools around real infrastructure — not tutorials.
-
-Currently studying for the **Cisco CyberOps Associate (200-201 CBROPS)** certification.
-
 ---
 
 ## What I Work With
@@ -22,11 +18,6 @@ Currently studying for the **Cisco CyberOps Associate (200-201 CBROPS)** certifi
 - Grafana, Loki, Promtail, Netdata — full observability stack
 - Git, systemd, cron, bash
 
-**Currently Learning**
-- Cisco CyberOps (CBROPS 200-201)
-- Network forensics and threat hunting
-- VLAN segmentation and managed switch configuration
-
 ---
 
 ## Projects
@@ -37,13 +28,6 @@ Production homelab on Ubuntu 24 — Suricata IDS, self-hosted encrypted DNS, Ope
 **Stack:** Python · Docker · Suricata · Grafana · Pi-hole · FastAPI · Nginx · Authentik
 
 ---
-
-## Certifications
-
-| Certification | Status |
-|---|---|
-| Cisco CyberOps Associate (200-201) | In progress |
-
 ---
 
 ## Contact
