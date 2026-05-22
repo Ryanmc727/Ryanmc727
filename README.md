@@ -32,5 +32,5 @@ Production homelab on Ubuntu 24 — Suricata IDS, self-hosted encrypted DNS, Ope
 
 ## Contact
 
-- Email: ryanamccabe46@gmail.com
+- Email: rmccabe727@gmail.com
 - GitHub: [Ryanmc727](https://github.com/Ryanmc727)
