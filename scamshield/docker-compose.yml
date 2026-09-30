@@ -1,0 +1,22 @@
+services:
+  scamshield-web:
+    build: .
+    command: scamshield serve --port 8080
+    ports: ["8080:8080"]
+    environment:
+      - ANTHROPIC_API_KEY
+      - SCAMSHIELD_CONFIG=/app/config.yaml
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+    restart: unless-stopped
+
+  scamshield-email:
+    build: .
+    command: scamshield email-guard
+    environment:
+      - ANTHROPIC_API_KEY
+      - SCAMSHIELD_CONFIG=/app/config.yaml
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+      - ./state:/app/state
+    restart: unless-stopped

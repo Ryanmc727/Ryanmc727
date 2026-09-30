@@ -1,0 +1,35 @@
+# Copy to config.yaml and fill in. Keep config.yaml out of git.
+
+# Family, friends, doctor's office, pharmacy... never flagged unless they ask
+# for gift cards, crypto, wires, or codes (in case their account got hacked).
+trusted_senders:
+  - daughter@example.com
+  - "+1 555 123 4567"
+
+# Who gets a heads-up when a scam is caught. ntfy is free and has phone apps.
+guardian_ntfy_topic: "grandma-scamshield-change-me-to-something-random"
+ntfy_server: https://ntfy.sh
+guardian_email: ""
+smtp_host: ""
+smtp_port: 587
+smtp_username: ""
+smtp_password: ""
+
+# AI second opinion (needs ANTHROPIC_API_KEY in the environment).
+ai_enabled: true
+ai_model: claude-opus-5-5
+
+# Inboxes to watch. Use an APP PASSWORD, not the real password.
+# Gmail: imap.gmail.com | Outlook: outlook.office365.com | Yahoo: imap.mail.yahoo.com
+# iCloud: imap.mail.me.com | AOL: imap.aol.com
+email_accounts:
+  - host: imap.gmail.com
+    username: grandma@gmail.com
+    password: "xxxx xxxx xxxx xxxx"
+    quarantine_folder: "ScamShield Quarantine"
+
+poll_seconds: 120
+
+# Shared secret for /api/check (phone Shortcuts send it as X-ScamShield-Token).
+# Or set SCAMSHIELD_API_TOKEN in the environment.
+api_token: "change-me"

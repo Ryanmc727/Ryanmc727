@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ScamShield</title>
+<style>
+  :root { --bg:#f7f5f0; --ink:#1d1d1d; --card:#fff; --line:#d8d3c8; --accent:#1f5fbf;
+          --safe:#1e7b3a; --warn:#9a6700; --bad:#b3261e; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#161616; --ink:#f2f2f2; --card:#222; --line:#3a3a3a; --accent:#7fb0ff;
+            --safe:#5cd17f; --warn:#ffc94d; --bad:#ff7b72; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font: 22px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 34px; margin: 0 0 4px; }
+  p.lead { margin: 0 0 20px; }
+  label { font-weight: 700; display:block; margin: 16px 0 6px; }
+  textarea, input { width:100%; font:inherit; padding:14px; border:2px solid var(--line);
+                    border-radius:12px; background:var(--card); color:var(--ink); }
+  textarea { min-height: 200px; }
+  button { margin-top:18px; width:100%; font:inherit; font-weight:800; font-size:26px;
+           padding:18px; border:0; border-radius:14px; background:var(--accent); color:#fff; cursor:pointer; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 4px solid var(--accent); outline-offset: 2px; }
+  #result { margin-top:24px; padding:20px; border-radius:14px; border:4px solid var(--line);
+            background:var(--card); display:none; }
+  #result h2 { margin:0 0 8px; font-size:30px; }
+  #result.safe { border-color:var(--safe); } #result.safe h2 { color:var(--safe); }
+  #result.suspicious { border-color:var(--warn); } #result.suspicious h2 { color:var(--warn); }
+  #result.scam { border-color:var(--bad); } #result.scam h2 { color:var(--bad); }
+  #result ul { padding-left: 24px; }
+  .tip { margin-top: 28px; padding: 16px; border-left: 6px solid var(--accent); background: var(--card); border-radius: 8px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Is this a scam?</h1>
+  <p class="lead">Copy the email or text you're unsure about and paste it below.</p>
+
+  <label for="body">The message</label>
+  <textarea id="body" placeholder="Paste the message here"></textarea>
+
+  <label for="sender">Who it's from (optional)</label>
+  <input id="sender" placeholder="Phone number or email address">
+
+  <button id="go">Check it</button>
+
+  <section id="result" role="status" aria-live="polite">
+    <h2 id="headline"></h2>
+    <p id="advice"></p>
+    <ul id="reasons"></ul>
+  </section>
+
+  <div class="tip"><strong>Golden rule:</strong> if anyone asks for gift cards, crypto, a wire transfer,
+    or a code that was texted to you, it's a scam. Hang up and call someone you trust.</div>
+</main>
+<script>
+  const token = new URLSearchParams(location.search).get("token") || "";
+  const $ = (id) => document.getElementById(id);
+  $("go").addEventListener("click", async () => {
+    const body = $("body").value.trim();
+    if (!body) { $("body").focus(); return; }
+    $("go").disabled = true; $("go").textContent = "Checking…";
+    try {
+      const sender = $("sender").value.trim();
+      const r = await fetch("/api/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-ScamShield-Token": token },
+        body: JSON.stringify({ channel: sender.includes("@") ? "email" : "sms", body, sender, alert_guardian: false }),
+      });
+      if (!r.ok) throw new Error(r.status);
+      const v = await r.json();
+      const res = $("result");
+      res.className = v.level; res.style.display = "block";
+      $("headline").textContent = v.headline;
+      $("advice").textContent = v.advice;
+      $("reasons").replaceChildren(...v.reasons.slice(0, 4).map((t) => {
+        const li = document.createElement("li"); li.textContent = t; return li; }));
+      res.scrollIntoView({ behavior: "smooth" });
+    } catch (e) {
+      alert("Sorry, the checker couldn't be reached. If in doubt, don't click or reply.");
+    } finally {
+      $("go").disabled = false; $("go").textContent = "Check it";
+    }
+  });
+</script>
+</body>
+</html>
